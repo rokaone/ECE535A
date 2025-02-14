@@ -101,9 +101,17 @@ class MonteCarlo:
             plt.figure(1)
             plt.loglog(alphas, p_error, label=f"n: {n}", marker='x')
             plt.legend()
+            plt.grid(True)
+            plt.title("Probability of Error for Repetition Code")
+            plt.xlabel(r'$\alpha$')
+            plt.ylabel(r'$P_e$')
             plt.figure(2)
             plt.loglog(alphas, p_error_diff, label=f"p_e error - n: {n}", marker='x')
             plt.legend()
+            plt.grid(True)
+            plt.title("Error in Probability of Error for Repetition Code")
+            plt.xlabel(r'$\alpha$')
+            plt.ylabel(r'$Error(P_e)$')
     
     def run_trials_bpsk(self) -> None:
         N = int(self.calc_n_trials())
@@ -115,7 +123,7 @@ class MonteCarlo:
         p_error_vec = []
         sigma_vec = []
         bit_chan_vec = []
-        for sigma in range(5, 105, 5):
+        for sigma in range(10, 105, 5):
             chan = Channel(0, sigma/100, 0)
             bit_err = 0
             #print(f"Running {N} Trials")
@@ -134,17 +142,20 @@ class MonteCarlo:
             print(f"\tsigma: {sigma/100} | P_e: {p_e}")
             p_error_vec.append(p_e)
             sigma_vec.append(sigma/100)
-        plt.figure(1)
+        plt.figure(3)
         plt.loglog(sigma_vec, p_error_vec, marker='x')
-        plt.legend()
-        plt.figure(2)
-        plt.hist(bit_chan_vec, density=True, bins=100)
+        plt.grid(True)
+        plt.title("Probability of Error for BSPK in AWGN Channel")
+        plt.xlabel(r'$\sigma$')
+        plt.ylabel(r'$P_e$')
+        #plt.figure(4)
+        #plt.hist(bit_chan_vec, density=True, bins=100)
 
 
 if __name__=="__main__":
 
-    mc = MonteCarlo(0.9, 1e-3, 0.1)
-    #mc.run_trials_rep_code(11)
-    mc.run_trials_bpsk()
+    mc = MonteCarlo(0.9, 1e-2, 0.1)
+    mc.run_trials_rep_code(11)
+    #mc.run_trials_bpsk()
     plt.show()
     print("Done")
