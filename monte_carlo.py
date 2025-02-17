@@ -64,6 +64,7 @@ class MonteCarlo:
 
     def run_single_trial_rep_code(self, n, N):
         """Function to run a single trial with a given n"""
+        print("Starting trial n:", n)
         g = Generator([0, 1], [0.5, 0.5])
         dec = Decoder()
         p_error = []
@@ -93,6 +94,7 @@ class MonteCarlo:
             p_error_diff.append(np.abs(p_e - p_e_expected))
             alphas.append(alpha / 100)
 
+        print("Finished trial n:", n)
         return n, alphas, p_error, p_error_diff  # Return results for plotting
 
     def run_trials_rep_code_parallel(self, repetitions: int) -> None:
@@ -126,6 +128,7 @@ class MonteCarlo:
 
     def run_single_trial_bpsk(self, sigma, N):
         """Function to run a single BPSK trial"""
+        print("Starting trial:", sigma)
         g = Generator([0, 1], [0.5, 0.5])
         dec = Decoder()
         chan = Channel(0, sigma / 100, 0)
@@ -142,12 +145,13 @@ class MonteCarlo:
                 bit_err += 1
 
         p_e = bit_err / N
+        print("Finished trial:", sigma)
         return sigma / 100, p_e
 
     def run_trials_bpsk_parallel(self) -> None:
         """Parallelized version of run_trials_bpsk"""
         N = self.calc_n_trials()
-        sigma_values = list(range(10, 105, 5))
+        sigma_values = list(range(10, 105 , 5))
         num_workers = min(mp.cpu_count(), len(sigma_values))
 
         with mp.Pool(processes=num_workers) as pool:
@@ -168,8 +172,8 @@ if __name__ == "__main__":
     mp.set_start_method("spawn", force=True)
 
     mc = MonteCarlo(0.9, 1e-2, 0.1)
-    mc.run_trials_rep_code_parallel(repetitions=11)
-    #mc.run_trials_bpsk_parallel()
+    #mc.run_trials_rep_code_parallel(repetitions=9)
+    mc.run_trials_bpsk_parallel()
     plt.show()
     print("Done")
 
