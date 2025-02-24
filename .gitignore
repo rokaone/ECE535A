@@ -1,1 +1,6 @@
 venv
+*.mat
+*.png
+*.jpg
+*.asv
+*.txt
